@@ -11,7 +11,7 @@ const GEMINI_FLASH: LLM = {
   provider: "google",
   hostedId: "gemini-1.5-pro-latest",
   platformLink: GOOGLE_PLATORM_LINK,
-  imageInput: false
+  imageInput: true
 }
 
 // Gemini Pro (UPDATED 12/22/23)
