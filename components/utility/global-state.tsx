@@ -107,6 +107,10 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const [focusAssistant, setFocusAssistant] = useState(false)
   const [atCommand, setAtCommand] = useState("")
   const [isAssistantPickerOpen, setIsAssistantPickerOpen] = useState(false)
+  // for cmd
+  const [cmdCommand, setCmdCommand] = useState("")
+  const [isCmdPickerOpen, setIsCmdPickerOpen] = useState(false)
+  const [focusCmd, setFocusCmd] = useState(false)
 
   // ATTACHMENTS STORE
   const [chatFiles, setChatFiles] = useState<ChatFile[]>([])
@@ -299,6 +303,13 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
         setAtCommand,
         isAssistantPickerOpen,
         setIsAssistantPickerOpen,
+        // cmd
+        cmdCommand,
+        setCmdCommand,
+        isCmdPickerOpen,
+        setIsCmdPickerOpen,
+        focusCmd,
+        setFocusCmd,
 
         // ATTACHMENT STORE
         chatFiles,

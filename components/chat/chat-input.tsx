@@ -54,7 +54,11 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
     chatSettings,
     selectedTools,
     setSelectedTools,
-    assistantImages
+    assistantImages,
+    isCmdPickerOpen,
+    setIsCmdPickerOpen,
+    setFocusCmd,
+    focusCmd,
   } = useContext(ChatbotUIContext)
 
   const {
@@ -93,7 +97,8 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
       isPromptPickerOpen ||
       isFilePickerOpen ||
       isToolPickerOpen ||
-      isAssistantPickerOpen
+      isAssistantPickerOpen || 
+      isCmdPickerOpen
     ) {
       if (
         event.key === "Tab" ||
@@ -106,6 +111,7 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
         if (isFilePickerOpen) setFocusFile(!focusFile)
         if (isToolPickerOpen) setFocusTool(!focusTool)
         if (isAssistantPickerOpen) setFocusAssistant(!focusAssistant)
+        if (isCmdPickerOpen) setFocusCmd(!focusCmd)
       }
     }
 

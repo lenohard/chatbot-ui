@@ -108,10 +108,20 @@ interface ChatbotUIContext {
   setFocusTool: Dispatch<SetStateAction<boolean>>
   focusAssistant: boolean
   setFocusAssistant: Dispatch<SetStateAction<boolean>>
+
   atCommand: string
   setAtCommand: Dispatch<SetStateAction<string>>
   isAssistantPickerOpen: boolean
   setIsAssistantPickerOpen: Dispatch<SetStateAction<boolean>>
+
+  // for start new and copy curernt custome cmds
+  isCmdPickerOpen: boolean
+  setIsCmdPickerOpen: Dispatch<SetStateAction<boolean>>
+  cmdCommand: string
+  setCmdCommand: Dispatch<SetStateAction<string>>
+  focusCmd: boolean
+  setFocusCmd: Dispatch<SetStateAction<boolean>>
+  
 
   // ATTACHMENTS STORE
   chatFiles: ChatFile[]
@@ -238,6 +248,13 @@ export const ChatbotUIContext = createContext<ChatbotUIContext>({
   setAtCommand: () => {},
   isAssistantPickerOpen: false,
   setIsAssistantPickerOpen: () => {},
+  // for cmd
+  cmdCommand: "",
+  setCmdCommand: () => {},
+  isCmdPickerOpen: false,
+  setIsCmdPickerOpen: () => {},
+  focusCmd: false,
+  setFocusCmd: () => {},
 
   // ATTACHMENTS STORE
   chatFiles: [],
