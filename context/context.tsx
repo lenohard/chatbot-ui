@@ -121,7 +121,6 @@ interface ChatbotUIContext {
   setCmdCommand: Dispatch<SetStateAction<string>>
   focusCmd: boolean
   setFocusCmd: Dispatch<SetStateAction<boolean>>
-  
 
   // ATTACHMENTS STORE
   chatFiles: ChatFile[]

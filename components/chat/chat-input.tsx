@@ -58,7 +58,7 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
     isCmdPickerOpen,
     setIsCmdPickerOpen,
     setFocusCmd,
-    focusCmd,
+    focusCmd
   } = useContext(ChatbotUIContext)
 
   const {
@@ -97,7 +97,7 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
       isPromptPickerOpen ||
       isFilePickerOpen ||
       isToolPickerOpen ||
-      isAssistantPickerOpen || 
+      isAssistantPickerOpen ||
       isCmdPickerOpen
     ) {
       if (

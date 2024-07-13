@@ -9,211 +9,208 @@ import { useContext } from "react"
 import { useChatHandler } from "./use-chat-handler"
 
 export const usePromptAndCommand = () => {
-    const {
-        chatFiles,
-        setNewMessageFiles,
-        userInput,
-        setUserInput,
-        setShowFilesDisplay,
-        setIsPromptPickerOpen,
-        setIsFilePickerOpen,
-        setSlashCommand,
-        setHashtagCommand,
-        setUseRetrieval,
-        setToolCommand,
-        setIsToolPickerOpen,
-        setSelectedTools,
-        setAtCommand,
-        setIsAssistantPickerOpen,
-        setSelectedAssistant,
-        setChatSettings,
-        setChatFiles,
-        setCmdCommand,
-        setIsCmdPickerOpen
-    } = useContext(ChatbotUIContext)
+  const {
+    chatFiles,
+    setNewMessageFiles,
+    userInput,
+    setUserInput,
+    setShowFilesDisplay,
+    setIsPromptPickerOpen,
+    setIsFilePickerOpen,
+    setSlashCommand,
+    setHashtagCommand,
+    setUseRetrieval,
+    setToolCommand,
+    setIsToolPickerOpen,
+    setSelectedTools,
+    setAtCommand,
+    setIsAssistantPickerOpen,
+    setSelectedAssistant,
+    setChatSettings,
+    setChatFiles,
+    setCmdCommand,
+    setIsCmdPickerOpen
+  } = useContext(ChatbotUIContext)
 
-    const handleInputChange = (value: string) => {
-        const atTextRegex = /@([^ ]*)$/
-        const slashTextRegex = /\/([^ ]*)$/
-        const hashtagTextRegex = /#([^ ]*)$/
-        const toolTextRegex = /!([^ ]*)$/
-        const percentTextRegex = /%([^ ]*)$/ 
-        const atMatch = value.match(atTextRegex)
-        const slashMatch = value.match(slashTextRegex)
-        const hashtagMatch = value.match(hashtagTextRegex)
-        const toolMatch = value.match(toolTextRegex)
-        const percentMatch = value.match(percentTextRegex)
+  const handleInputChange = (value: string) => {
+    const atTextRegex = /@([^ ]*)$/
+    const slashTextRegex = /\/([^ ]*)$/
+    const hashtagTextRegex = /#([^ ]*)$/
+    const toolTextRegex = /!([^ ]*)$/
+    const percentTextRegex = /%([^ ]*)$/
+    const atMatch = value.match(atTextRegex)
+    const slashMatch = value.match(slashTextRegex)
+    const hashtagMatch = value.match(hashtagTextRegex)
+    const toolMatch = value.match(toolTextRegex)
+    const percentMatch = value.match(percentTextRegex)
 
-        if (atMatch) {
-            setIsAssistantPickerOpen(true)
-            setAtCommand(atMatch[1])
-        } else if (slashMatch) {
-            setIsPromptPickerOpen(true)
-            setSlashCommand(slashMatch[1])
-        } else if (hashtagMatch) {
-            setIsFilePickerOpen(true)
-            setHashtagCommand(hashtagMatch[1])
-        } else if (toolMatch) {
-            setIsToolPickerOpen(true)
-            setToolCommand(toolMatch[1])
-        } else if(percentMatch) {
-            setIsCmdPickerOpen(true)
-            setCmdCommand(percentMatch[1])
-        } else {
-            setIsPromptPickerOpen(false)
-            setIsFilePickerOpen(false)
-            setIsToolPickerOpen(false)
-            setIsAssistantPickerOpen(false)
-            setIsCmdPickerOpen(false)
-            setSlashCommand("")
-            setHashtagCommand("")
-            setToolCommand("")
-            setAtCommand("")
-            setCmdCommand("")
-        }
-
-        setUserInput(value)
+    if (atMatch) {
+      setIsAssistantPickerOpen(true)
+      setAtCommand(atMatch[1])
+    } else if (slashMatch) {
+      setIsPromptPickerOpen(true)
+      setSlashCommand(slashMatch[1])
+    } else if (hashtagMatch) {
+      setIsFilePickerOpen(true)
+      setHashtagCommand(hashtagMatch[1])
+    } else if (toolMatch) {
+      setIsToolPickerOpen(true)
+      setToolCommand(toolMatch[1])
+    } else if (percentMatch) {
+      setIsCmdPickerOpen(true)
+      setCmdCommand(percentMatch[1])
+    } else {
+      setIsPromptPickerOpen(false)
+      setIsFilePickerOpen(false)
+      setIsToolPickerOpen(false)
+      setIsAssistantPickerOpen(false)
+      setIsCmdPickerOpen(false)
+      setSlashCommand("")
+      setHashtagCommand("")
+      setToolCommand("")
+      setAtCommand("")
+      setCmdCommand("")
     }
 
+    setUserInput(value)
+  }
 
-    const handleSelectPrompt = (prompt: Tables<"prompts">) => {
-        setIsPromptPickerOpen(false)
-        setUserInput(userInput.replace(/\/[^ ]*$/, "") + prompt.content)
+  const handleSelectPrompt = (prompt: Tables<"prompts">) => {
+    setIsPromptPickerOpen(false)
+    setUserInput(userInput.replace(/\/[^ ]*$/, "") + prompt.content)
+  }
+
+  const handleSelectUserFile = async (file: Tables<"files">) => {
+    setShowFilesDisplay(true)
+    setIsFilePickerOpen(false)
+    setUseRetrieval(true)
+
+    setNewMessageFiles(prev => {
+      const fileAlreadySelected =
+        prev.some(prevFile => prevFile.id === file.id) ||
+        chatFiles.some(chatFile => chatFile.id === file.id)
+
+      if (!fileAlreadySelected) {
+        return [
+          ...prev,
+          {
+            id: file.id,
+            name: file.name,
+            type: file.type,
+            file: null
+          }
+        ]
+      }
+      return prev
+    })
+
+    setUserInput(userInput.replace(/#[^ ]*$/, ""))
+  }
+
+  interface Command {
+    name: string
+    description: string
+  }
+  const { handleNewChat } = useChatHandler()
+  // handleSelecCmd to handle the cmds
+  const handleSelectCmd = (cmd: Command) => {
+    if (cmd.name === "new chat") {
+      console.log("new chat")
+      handleNewChat()
+    } else if (cmd.name === "copy chat history") {
+      console.log("copy chat history")
     }
+  }
 
-    const handleSelectUserFile = async (file: Tables<"files">) => {
-        setShowFilesDisplay(true)
-        setIsFilePickerOpen(false)
-        setUseRetrieval(true)
+  const handleSelectUserCollection = async (
+    collection: Tables<"collections">
+  ) => {
+    setShowFilesDisplay(true)
+    setIsFilePickerOpen(false)
+    setUseRetrieval(true)
 
-        setNewMessageFiles(prev => {
-            const fileAlreadySelected =
-                prev.some(prevFile => prevFile.id === file.id) ||
-                chatFiles.some(chatFile => chatFile.id === file.id)
+    const collectionFiles = await getCollectionFilesByCollectionId(
+      collection.id
+    )
 
-            if (!fileAlreadySelected) {
-                return [
-                    ...prev,
-                    {
-                        id: file.id,
-                        name: file.name,
-                        type: file.type,
-                        file: null
-                    }
-                ]
-            }
-            return prev
-        })
-
-        setUserInput(userInput.replace(/#[^ ]*$/, ""))
-    }
-
-    interface Command {
-        name: string;
-        description: string;
-    }
-    const { handleNewChat } = useChatHandler()
-    // handleSelecCmd to handle the cmds
-    const handleSelectCmd = (cmd: Command) => {  
-        if (cmd.name === "new chat") {
-            console.log("new chat")
-            handleNewChat()
-        }else if (cmd.name === "copy chat history") {
-            console.log("copy chat history")
-        }
-    }
-
-
-    const handleSelectUserCollection = async (
-        collection: Tables<"collections">
-    ) => {
-        setShowFilesDisplay(true)
-        setIsFilePickerOpen(false)
-        setUseRetrieval(true)
-
-        const collectionFiles = await getCollectionFilesByCollectionId(
-            collection.id
+    setNewMessageFiles(prev => {
+      const newFiles = collectionFiles.files
+        .filter(
+          file =>
+            !prev.some(prevFile => prevFile.id === file.id) &&
+            !chatFiles.some(chatFile => chatFile.id === file.id)
         )
+        .map(file => ({
+          id: file.id,
+          name: file.name,
+          type: file.type,
+          file: null
+        }))
 
-        setNewMessageFiles(prev => {
-            const newFiles = collectionFiles.files
-                .filter(
-                    file =>
-                    !prev.some(prevFile => prevFile.id === file.id) &&
-                    !chatFiles.some(chatFile => chatFile.id === file.id)
-                )
-                .map(file => ({
-                    id: file.id,
-                    name: file.name,
-                    type: file.type,
-                    file: null
-                }))
+      return [...prev, ...newFiles]
+    })
 
-            return [...prev, ...newFiles]
-        })
+    setUserInput(userInput.replace(/#[^ ]*$/, ""))
+  }
 
-        setUserInput(userInput.replace(/#[^ ]*$/, ""))
+  const handleSelectTool = (tool: Tables<"tools">) => {
+    setIsToolPickerOpen(false)
+    setUserInput(userInput.replace(/![^ ]*$/, ""))
+    setSelectedTools(prev => [...prev, tool])
+  }
+
+  const handleSelectAssistant = async (assistant: Tables<"assistants">) => {
+    setIsAssistantPickerOpen(false)
+    setUserInput(userInput.replace(/@[^ ]*$/, ""))
+    setSelectedAssistant(assistant)
+
+    setChatSettings({
+      model: assistant.model as LLMID,
+      prompt: assistant.prompt,
+      temperature: assistant.temperature,
+      contextLength: assistant.context_length,
+      includeProfileContext: assistant.include_profile_context,
+      includeWorkspaceInstructions: assistant.include_workspace_instructions,
+      embeddingsProvider: assistant.embeddings_provider as "openai" | "local"
+    })
+
+    let allFiles = []
+
+    const assistantFiles = (await getAssistantFilesByAssistantId(assistant.id))
+      .files
+    allFiles = [...assistantFiles]
+    const assistantCollections = (
+      await getAssistantCollectionsByAssistantId(assistant.id)
+    ).collections
+    for (const collection of assistantCollections) {
+      const collectionFiles = (
+        await getCollectionFilesByCollectionId(collection.id)
+      ).files
+      allFiles = [...allFiles, ...collectionFiles]
     }
+    const assistantTools = (await getAssistantToolsByAssistantId(assistant.id))
+      .tools
 
-    const handleSelectTool = (tool: Tables<"tools">) => {
-        setIsToolPickerOpen(false)
-        setUserInput(userInput.replace(/![^ ]*$/, ""))
-        setSelectedTools(prev => [...prev, tool])
-    }
+    setSelectedTools(assistantTools)
+    setChatFiles(
+      allFiles.map(file => ({
+        id: file.id,
+        name: file.name,
+        type: file.type,
+        file: null
+      }))
+    )
 
-    const handleSelectAssistant = async (assistant: Tables<"assistants">) => {
-        setIsAssistantPickerOpen(false)
-        setUserInput(userInput.replace(/@[^ ]*$/, ""))
-        setSelectedAssistant(assistant)
+    if (allFiles.length > 0) setShowFilesDisplay(true)
+  }
 
-        setChatSettings({
-            model: assistant.model as LLMID,
-            prompt: assistant.prompt,
-            temperature: assistant.temperature,
-            contextLength: assistant.context_length,
-            includeProfileContext: assistant.include_profile_context,
-            includeWorkspaceInstructions: assistant.include_workspace_instructions,
-            embeddingsProvider: assistant.embeddings_provider as "openai" | "local"
-        })
-
-        let allFiles = []
-
-        const assistantFiles = (await getAssistantFilesByAssistantId(assistant.id))
-            .files
-        allFiles = [...assistantFiles]
-        const assistantCollections = (
-            await getAssistantCollectionsByAssistantId(assistant.id)
-        ).collections
-        for (const collection of assistantCollections) {
-            const collectionFiles = (
-                await getCollectionFilesByCollectionId(collection.id)
-            ).files
-            allFiles = [...allFiles, ...collectionFiles]
-        }
-        const assistantTools = (await getAssistantToolsByAssistantId(assistant.id))
-            .tools
-
-        setSelectedTools(assistantTools)
-        setChatFiles(
-            allFiles.map(file => ({
-                id: file.id,
-                name: file.name,
-                type: file.type,
-                file: null
-            }))
-        )
-
-        if (allFiles.length > 0) setShowFilesDisplay(true)
-    }
-
-    return {
-        handleInputChange,
-        handleSelectPrompt,
-        handleSelectUserFile,
-        handleSelectUserCollection,
-        handleSelectTool,
-        handleSelectAssistant,
-        handleSelectCmd
-
-    }
+  return {
+    handleInputChange,
+    handleSelectPrompt,
+    handleSelectUserFile,
+    handleSelectUserCollection,
+    handleSelectTool,
+    handleSelectAssistant,
+    handleSelectCmd
+  }
 }
